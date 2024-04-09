@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Đăng nhập Hệ thống | Hệ thống thi trực tuyến KNNQG</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta name="robots" content="noindex">
+    <meta name="googlebot" content="noindex">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/lte.css') }}">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8SMP2VS7MP"></script>
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+        gtag('config', 'G-8SMP2VS7MP');
+    </script>
+</head>
+<body class="hold-transition login-page">
+<div class="login-box">
+    <div class="login-logo">
+        <a href="#"><b>VNSKILLS </b>LOGIN</a>
+    </div>
+    <div class="login-box-body">
+        <p class="text-center">
+            <img style="width: 250px; margin-top: -20px;"
+                 src="{{ url_for('static', filename='images/viet-nam-skill-vlute-min.png') }}" alt="">
+        </p>
+        <p class="login-box-msg">Đăng nhập để bắt đầu phiên làm việc</p>
+        <form action="{{ url_for('postDangNhap') }}" method="post">
+            <div class="form-group has-feedback">
+                <input required name="email" class="form-control" placeholder="Tên truy cập"
+                       value="{{ request.args.get('email', '') }}">
+                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <input type="text" name="log" hidden class="log" value="">
+                <input type="text" name="ip" hidden class="ip" value="">
+                <input required type="password" name="matkhau" class="form-control" placeholder="Mật khẩu" value="">
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            </div>
+            <a style="margin-bottom: 10px; display: block"
+               href="{{ url_for('getViewQuenMatKhau', email=request.args.get('email', '')) }}">Tôi không nhớ mật
+                khẩu?</a>
+            <div class="row">
+                <div class="col-xs-12">
+                    <button type="submit" class="btn btn-primary btn-block btn-flat">Đăng nhập</button>
+                    <br>
+                </div>
+            </div>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="alert alert-danger" role="alert">
+                <p>{{ messages[0] }}</p>
+            </div>
+            {% endif %}
+            {% endwith %}
+        </form>
+        <div class="social-auth-links text-center">
+            <p>- Hoặc -</p>
+            <a href="{{ url_for('getViewDangKy') }}" class="btn btn-warning btn-block btn-flat">Đăng ký Tài khoản</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+<script type="application/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            url: "https://ipinfo.io/?token=c4fdc01d6cd260",
+            type: "GET",
+            success: function (result) {
+                $('.ip').val(result.ip);
+                $('.log').val(JSON.stringify(result));
+            }
+        });
+    });
+</script>

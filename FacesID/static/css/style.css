@@ -1,0 +1,112 @@
+.table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+    padding: 8px;
+    line-height: 1.42857143;
+    vertical-align: middle;
+    border-top: 1px solid #ddd;
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+.cap-nhat > i, .icon-cap-nhat > i {
+    font-size: 18px;
+    margin-right: 5px;
+}
+
+.xoa > i, .icon-xoa > i {
+    font-size: 20px;
+    margin-top: -2px;
+}
+
+.xoa:hover {
+    color: #d43f3a;
+}
+
+.cap-nhat:hover {
+    color: #00a7d0;
+}
+
+.download > i {
+    font-size: 22px;
+    margin-top: -2px;
+}
+
+.view {
+    font-size: 18px;
+    margin-right: 5px;
+}
+
+.label-container {
+    position: fixed;
+    bottom: 48px;
+    right: 105px;
+    display: table;
+    visibility: hidden;
+}
+
+.label-text {
+    color: #FFF;
+    background: rgba(51, 51, 51, 0.5);
+    display: table-cell;
+    vertical-align: middle;
+    padding: 10px;
+    border-radius: 3px;
+}
+
+.label-arrow {
+    display: table-cell;
+    vertical-align: middle;
+    color: #333;
+    opacity: 0.5;
+}
+
+.float {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    bottom: 40px;
+    right: 40px;
+    background-color: #06C;
+    color: #FFF;
+    border-radius: 50px;
+    text-align: center;
+    box-shadow: 2px 2px 3px #999;
+}
+
+.my-float {
+    font-size: 24px;
+    margin-top: 18px;
+}
+
+a.float + div.label-container {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.5s ease;
+}
+
+a.float:hover + div.label-container {
+    visibility: visible;
+    opacity: 1;
+}
+
+.item-co {
+    display: table;
+}
+
+.item-co i {
+    font-size: 100px;
+    float: left;
+    margin-right: 15px;
+}
+
+.item-co div {
+    margin-left: 10px;
+    font-size: 18px;
+    display: inline;
+    vertical-align: middle;
+}
