@@ -1,722 +1,383 @@
 {% extends "auth/master.html" %}
-{% block title %} Tài khoản Cá nhân {% endblock %}
+{% block title %} Quản lý tài khoản {% endblock %}
 
 {% block content %}
+<style>
+    .avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 10px;
+    }
+</style>
 <section class="content-header">
     <h1>
-        <b>Hội đồng thi Nghề: {{ nghe.ten_nghe }}</b>
+        <b>Người dùng</b>
+        <small>Danh sách người dùng</small>
     </h1>
 </section>
-<style>
-    .item-vps {
-        float: left;
-        margin-right: 10px;
-        margin-bottom: 7px;
-    }
-
-    .item-vps img {
-        margin-right: 5px;
-        height: 20px;
-    }
-
-    .img-thumbnail {
-        padding: 0;
-    }
-
-    .div-vps {
-        margin: 5px 7px 30px 7px;
-        background: #FFFFFF;
-        border-radius: 10px;
-        padding: 15px;
-        border: 1px solid #EEEEEE;
-    }
-
-    .div-setting {
-        float: right;
-        margin-top: -40px;
-    }
-
-    .nav-tabs-custom > .nav-tabs > li.active a {
-        font-weight: bold;
-    }
-
-    .overlay {
-        pointer-events: none;
-        opacity: 0.4;
-    }
-
-</style>
-
 <section class="content">
-
-    <div class="row">
-        <div class="col-md-7">
-            <div class="box box-default">
-                <div class="box-header with-border">
-                    <h3 class="box-title text-primary text-bold">
-                        Thông báo từ Hội đồng thi
-                    </h3>
-                </div>
-                <div class="box-body">
-                    <div class="row">
-                        <div class="col-md-12 noi-dung">
-                            <p>{{ nghe.mo_ta|safe }}</p>
-                        </div>
-                        <div class="col-md-12 divShare" style="display: none">
-                            <button class="btn btn-primary" id="startShare">
-                                <i class="fa fa-share-alt" aria-hidden="true" style="margin-right: 10px;"></i>
-                                Chia sẻ màn hình
-                            </button>
-                        </div>
-
-                        <div class="col-md-12 tbMayAo" style="display: none">
-                            <div class="callout callout-warning">
-                                <p>
-                                    Bạn đang thao tác trên Máy tính ảo và tính năng chia sẽ màn hình sẽ không hoạt động
-                                </p>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-5">
-            <div class="box box-default">
-                <div class="box-header with-border">
-                    <h3 class="box-title text-primary text-bold">Thông tin Cá nhân</h3>
-                </div>
-                <div class="box-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5>Họ tên: <b>{{ taiKhoan.ho_ten }}</b></h5>
-                        </div>
-                        <div class="col-md-6">
-                            <h5>Ngày sinh: <b>{{ taiKhoan.ngay_sinh or '' }}</b></h5>
-                        </div>
-                        <div class="col-md-6">
-                            <h5>Số CMND/CCCD: <b>{{ taiKhoan.cmnd or ''}}</b></h5>
-                        </div>
-                        <div class="col-md-6">
-                            <h5>SĐT: <b>{{ taiKhoan.sdt or '' }}</b></h5>
-                        </div>
-                        <div class="col-md-6">
-                            <h5>Email: <b>{{ taiKhoan.email or ''}}</b></h5>
-                        </div>
-                        <div class="col-md-6">
-                            <h5>Chức danh: <b>{{ taiKhoan.ten_chuc_vu or '' }}</b></h5>
-                        </div>
-                        <div class="col-md-6">
-                            <h5>Đoàn dự thi: <b>{{ doan.ten_doan or '' }}</b></h5>
-                        </div>
-                        <div class="col-md-12">
-                            <h5>Địa chỉ: <b>{{ taiKhoan.dia_chi or '' }}</b></h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="row">
         <div class="col-md-12">
-            <div class="box box-default">
+            <div class="box box-solid">
                 <div class="box-header with-border">
-                    <h3 class="box-title text-primary text-bold">Tài nguyên từ Hội đồng thi</h3>
-                </div>
-                <div class="box-body">
-                    <div class="nav-tabs-custom">
-                        <ul class="nav nav-tabs">
-                            <li class="active tab de-thi" data="de-thi">
-                                <a href="#tab_1" data-toggle="tab" aria-expanded="true">
-                                    Thông tin đề thi ({{ de|length or '0' }})
-                                </a>
-                            </li>
-                            <li class="tab may-ao" data="may-ao">
-                                <a href="#tab_2" data-toggle="tab" aria-expanded="true">
-                                    Thông tin máy ảo Đám mây VLUTE ({{ mayao|length or '0' }})
-                                </a>
-                            </li>
-                            <li class="tab nop-bai" data="nop-bai">
-                                <a href="#tab_3" data-toggle="tab" aria-expanded="false">
-                                    Nộp bài thi
-                                </a>
-                            </li>
-                            <li class="tab ghi-man-hinh" data="ghi-man-hinh">
-                                <a href="#tab_4" data-toggle="tab" aria-expanded="false">
-                                    Ghi màn hình thí sinh
-                                </a>
-                            </li>
-                            <li class="tab hop" data="hop">
-                                <a href="#tab_5" data-toggle="tab" aria-expanded="true">
-                                    Phòng họp Trực tuyến
-                                </a>
-                            </li>
-                        </ul>
-                        <div class="tab-content">
-                            <div class="tab-pane active de-thi" id="tab_1">
-                                {% if de|length > 0 %}
-                                <table class="table-striped table">
-                                    <thead>
-                                    <tr>
-                                        <th style="width: 50px;">#</th>
-                                        <th>Tên đề thi</th>
-                                        <th style="width: 200px;">Thời gian mở đề</th>
-                                        <th style="width: 200px;">Thời gian đóng đề</th>
-                                        <th style="width: 150px;">Ngày tạo</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {% for item in de %}
-                                    <tr>
-                                        <td>
-                                            <a title="Tải về thi về" class="download" target="_blank"
-                                               href="{{ url_for('taiDeVe', id_nghe=nghe.id_nghe,idfile=item.url)}}">
-                                                <i class="fa fa-cloud-download" aria-hidden="true"></i>
-                                            </a>
-                                        </td>
-                                        <td><b>{{ item.tieu_de }}</b></td>
-                                        <td>{{ item.thoi_gian_mo }}</td>
-                                        <td>{{ item.thoi_gian_dong }}</td>
-                                        <td>{{ item.ngay_tao }}</td>
-                                    </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
-                                {% else %}
-                                <p>Hiện không có đề thi từ Hội đồng thi</p>
-                                {% endif %}
-                            </div>
-                            <div class="tab-pane may-ao" id="tab_2">
-                                <div class="row">
-                                    {% if mayao|length > 0 %}
-                                    {% for item in mayao %}
-                                    <div class="col-md-3">
-                                        <div class="div-vps {% if item.trang_thai == 0 %} overlay {% endif %}">
-                                            <img class="img-thumbnail no-border"
-                                                 src="{{ url_for('static', filename='images/light-theme-header.jpg') }}">
+                    <button style="float: left; margin-right: 5px;" class="btn btn-primary btnImport">Import Excel
+                    </button>
+                    <button style="float: left; margin-right: 5px;" class="btn btn-primary btnThem">Thêm mới</button>
+                    <button style="float: left; margin-right: 5px;" class="btn btn-primary btnCapNhatAnh">Cập nhật số
+                        lượng ảnh
+                    </button>
 
-                                            <h4 class="text-bold">
-                                                {{ item.ten_may_ao }}
-                                            </h4>
-
-                                            <p>Địa chỉ IP: <b>{{ item.dia_chi or '' }}</b></p>
-
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="item-vps">
-                                                        <img src="{{ url_for('static', filename='images/cpu.png') }}"
-                                                             alt="">
-                                                        <b>{{ item.cpu }}</b> vCPU
-                                                    </div>
-                                                    <div class="item-vps">
-                                                        <img src="{{ url_for('static', filename='images/ram.png') }}"
-                                                             alt="">
-                                                        <b>{{ item.ram }}</b> RAM
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <div class="btn-group div-setting">
-                                                        <button type="button"
-                                                                class="btn btn-box-tool dropdown-toggle"
-                                                                data-toggle="dropdown"
-                                                                aria-expanded="false">
-                                                            <img style="height: 20px; width: 20px;"
-                                                                 src="{{ url_for('static', filename='images/setting.png') }}">
-                                                        </button>
-                                                        {% if item.trang_thai == 1 %}
-                                                        <ul class="dropdown-menu" role="menu">
-                                                            <li>
-                                                                <a class="getmk text-primary"
-                                                                   data="{{ item.id_may_ao }}" href="#">
-                                                                    <b><i style="margin-right: 10px;" class="fa fa-key"
-                                                                          aria-hidden="true"></i> Sao chép mật khẩu</b>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="{{ url_for('taiVeRDP', id_may_ao=item.id_may_ao) }}"
-                                                                   target="_blank">
-                                                                    <b><i style="margin-right: 10px;" class="fa fa-plug"
-                                                                          aria-hidden="true"></i>Kết nối máy tính</b>
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                        {% endif %}
-                                                    </div>
-
-                                                    {% if item.rdp == 1 %}
-                                                    <hr>
-                                                    <p>
-                                                        <img style="height: 15px; width: 15px; margin-right: 10px;"
-                                                             src="/static/images/1709977.png" alt="">Thí sinh
-                                                        kết nối</p>
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {% endfor %}
-                                    {% else %}
-                                    <div class="col-md-12">
-                                        <p class="text-bold text-primary">Hiện không có máy ảo nào được cấp quyền sử
-                                            dụng</p>
-                                    </div>
-                                    {% endif %}
-
-                                    <div class="col-md-12">
-                                        <b> Lưu ý:</b>
-                                        <p>1. Thí sinh phải kết nối openVPN được cung cấp từ hội đồng thi.
-                                            (<a target="_blank"
-                                                href="https://vlute-screens-ap-southeast-1.s3.ap-southeast-1.amazonaws.com/huong-dan/C%E1%BA%A5u+h%C3%ACnh+VPN.mp4">
-                                                Xem Video Clip tại đây
-                                            </a>)
-                                        </p>
-                                        <p>2. Tải về file kết nối openVPN (<a href="{{ nghe.vpn }}">Tải về tại đây</a>)
-                                        </p>
-                                        <p>3. Đảm bảo kết nối thành công đến openVPN</p>
-                                        <p>4. Sử dụng kết nối mạng LAN với băng thông tối thiểu 30Mps/thí sinh</p>
-                                        <p>5. Xem hướng dẫn kết nối máy tính ảo
-                                            (<a target="_blank"
-                                                href="https://vlute-screens-ap-southeast-1.s3.ap-southeast-1.amazonaws.com/huong-dan/Giao+dien+chuc+nang+-+Thi+sinh.mp4">
-                                                Xem Video Clip tại đây
-                                            </a>)
-                                        </p>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div class="tab-pane nop-bai" id="tab_3">
-                                <div class="row">
-                                    {% for item in nopBai %}
-                                    {% if item.khung_gio == 1 %}
-                                    <div class="col-md-12">
-                                        <h5 style="font-size: 16px;" class="text-bold text-primary">
-                                            [ID: {{ item.id_thu_bai }}] {{ item.ten_dot }}</h5>
-                                        <div>
-                                            {{ item.mo_ta|safe or '' }}
-                                        </div>
-                                        {% if dsFile|length > 0%}
-                                        {% for tb in dsFile %}
-                                        {% if tb.id_thu_bai == item.id_thu_bai %}
-                                        <table class="table-striped table">
-                                            <thead>
-                                            <tr>
-                                                <th>Tên file đã tải lên</th>
-                                                <th style="width: 300px;">Checksum</th>
-                                                <th style="width: 100px;">Kích thước</th>
-                                                <th style="width: 150px;">Ngày tạo</th>
-                                                <th style="width: 50px;"></th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr>
-                                                <td><b>
-                                                    <a href="/static/nop-bai/{{ tb.folder }}/{{ tb.ten_file }}"
-                                                       target="_blank">{{ tb.ten_file }}</a>
-                                                </b></td>
-                                                <td>{{ tb.checksum }}</td>
-                                                <td>{{ tb.size_file }}</td>
-                                                <td>{{ tb.ngay_tao }}</td>
-                                                <td>
-                                                    <a style="font-weight: bold;" class="icon-xoa xoaNopBai"
-                                                       data="{{ tb.folder }}" title="Xóa bài thi đã nộp">
-                                                        <i class="fa fa-trash" aria-hidden="true"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                        {% endif %}
-                                        {% endfor %}
-                                        {% else %}
-                                        <p>Hạn nộp bài đến hết <span class="text-bold text-danger">{{ showDateTime(item.tg_ket_thuc) }}</span>
-                                        </p>
-                                        <button class="btn btn-success btnNopBai" data="{{ item.id_thu_bai }}">
-                                            <i class="fa fa-cloud-upload" aria-hidden="true"
-                                               style="margin-right: 10px;"></i>
-                                            Chọn tệp tin cần tải lên
-                                        </button>
-                                        {% endif %}
-                                    </div>
-                                    {% endif %}
-                                    {% endfor %}
-                                </div>
-                            </div>
-                            <div class="tab-pane ghi-man-hinh" id="tab_4">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <p>Thí sinh thực hiện ghi màn hình và tải lên video các buổi thi lên Google
-                                            Drive</p>
-                                        <p class="text-bold text-danger">Lưu ý: Thực hiện ở máy tính tại đơn vị tham gia
-                                            dự thi</p>
-                                        <a class="btn btn-primary" target="_blank" href="{{ url_for('getLinkUploadGhiManHinh', id_nghe=nghe.id_nghe) }}">
-                                            <i style="margin-right: 5px;" class="fa fa-motorcycle" aria-hidden="true"></i>
-                                            Đến thư mục nộp file ghi màn hình
-                                        </a>
-                                    </div>
-                                </div>
-                                {% if false %}
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <button class="btn btn-success taiLenFileGhiManHinh">
-                                            <i style="margin-right: 10px;" class="fa fa-cloud-upload"
-                                               aria-hidden="true"></i>
-                                            Tải lên file ghi màn hình
-                                        </button>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <table class="table">
-                                            <thead>
-                                            <tr>
-                                                <th>Tên file</th>
-                                                <th>Kích thước</th>
-                                                <th>Ngày tạo</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            {% for item in dsFileManHinh %}
-                                            <tr>
-                                                <td><b>{{ item.filename }}</b></td>
-                                                <td>{{ item.size }}KB</td>
-                                                <td>{{ item.last_modified }}</td>
-                                            </tr>
-                                            {% endfor %}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                {% endif %}
-                            </div>
-                            <div class="tab-pane hop" id="tab_5">
-                                <div class="row">
-
-                                    <div class="col-md-12">
-                                        <p>
-                                            Khi tham gia họp trực tuyến, <b class="text-bold text-danger">thí sinh sử
-                                            dụng phông nền theo quy định</b> của
-                                            nghề sự thi.
-                                            <a target="_blank"
-                                               href="https://drive.google.com/drive/folders/1m3FG3HgKw-6WDoXpvPIdLl8oJNMr6N6R?usp=sharing">
-                                                <b>Tải về tại đây</b>
-                                            </a>
-                                        </p>
-                                        <p>Yêu cầu đặt tên: <span class="text-bold text-danger">TS_{{ taiKhoan.ho_ten }}_{{ nghe.ten_nghe }}</span>
-                                        </p>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <h4 class="text-danger text-bold">1. Phòng họp hội đồng thi</h4>
-                                        {{ nghe.hop_truc_tuyen|safe or '' }}
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <h4 class="text-danger text-bold">2. Phòng họp Kỹ thuật</h4>
-                                        {{ nghe.hop_ky_thuat|safe or '' }}
-                                    </div>
-                                </div>
+                    <form action="" style="width: 500px; float: right;">
+                        <div class="input-group">
+                            <select class="form-control loc-don-vi" name="don-vi">
+                                <option value="0">-- Chọn đơn vị --</option>
+                                {% for item in donvi %}
+                                <option value="{{ item.id_don_vi }}">{{ item.ten_don_vi }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="input-group-btn">
+                                <button type="submit" class="btn btn-primary">Lọc thông tin</button>
                             </div>
                         </div>
+                    </form>
+
+                    <script>
+                        $('.loc-don-vi').val('{{id_don_vi}}')
+                        $('.loc-don-vi').select2();
+                    </script>
+
+                    <div style="margin-top: 5px;">
+                        {% for item in session['redirect-error'] or [] %}
+                        <div class="alert alert-danger" style="margin-bottom: 5px;">
+                            {{ item }}
+                        </div>
+                        {% endfor %}
+                        {{ clear_session('redirect-error') }}
                     </div>
+                </div>
+
+                <div class="box-body">
+                    <table class="table-striped table">
+                        <thead>
+                        <tr>
+                            <th style="width: 120px;">#</th>
+                            <th>Họ tên</th>
+                            <th>Đơn vị</th>
+                            <th>Lớp</th>
+                            <th>Tổng ảnh</th>
+                            <th>Đối tượng</th>
+                            <th>Ngày tạo</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in data %}
+                        <tr>
+                            <td>
+                                <a href="{{ url_for('getCTTaiKhoan', name=item.id_nguoi_dung) }}">
+                                    Chi tiết
+                                </a>
+                                |
+                                <a href="#" data="{{ item|to_json }}" class="capnhat">Cập nhật</a>
+                                |
+                                <a class="xoa" href="#" data="{{ item.id_nguoi_dung }}"
+                                   email="{{ item.email }}">Xóa</a>
+                            </td>
+                            <td>
+                                <img class="avatar" data-src="{{item.anh}}" alt="" onerror="imgError(this);">
+                                {{ item.ho_ten }}
+                            </td>
+                            <td>
+                                {{ item.ten_don_vi or '' }}
+                                <br>
+                                Email: {{ item.email }}
+                            </td>
+                            <td>{{ item.khoa_lop or '' }}</td>
+                            <td>{{ item.tong_anh or '0' }}</td>
+                            <td>
+                                {% if item.doi_tuong == 0 %}
+                                    <small class="label bg-green">Giảng viên</small>
+                                {% elif item.doi_tuong == 1 %}
+                                    <small class="label bg-yellow">Sinh viên</small>
+                                {% else %}
+                                    <small class="label bg-green">Khác</small>
+                                {% endif  %}
+                            </td>
+                            <td>{{ item.ngay_tao }}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<a href="#" class="float">
-    <i class="fa fa-flag-checkered my-float" aria-hidden="true"></i>
-</a>
-<div class="label-container">
-    <div class="label-text">Yêu cầu hỗ trợ</div>
-    <i class="fa fa-play label-arrow"></i>
-</div>
-
-<div class="modal fade" id="modelHoTro">
+<div class="modal fade" id="md-them">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Gửi yêu cầu hỗ trợ đến Hội đồng thi</h4>
+                <h4 class="modal-title">Thêm mới Người dùng</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-12 item-co">
-                        <i data="coxanh" style="color: #239B56;" class="co fa fa-flag-checkered" aria-hidden="true"></i>
-                        <div>
-                            <p><b style="color: #239B56;">Cờ xanh:</b> Khi thí sinh đã chuẩn bị/kiểm tra xong khu vực
-                                thi và sẵn sàng bắt đầu bài thi; Khi thí sinh muốn kết thúc bài thi sớm hơn thời gian
-                                quy định của bài thi.</p>
-                        </div>
+                    <div class="col-md-6">
+                        <label >Họ tên</label>
+                        <input type="text" class="form-control hoten" placeholder="Nguyễn Văn A">
                     </div>
-                    <div class="col-md-12 item-co">
-                        <i data="covang" style="color: #FFC300;" class="co fa fa-flag-checkered" aria-hidden="true"></i>
-                        <div>
-                            <p><b style="color: #FFC300;">Cờ vàng:</b> Khi thí sinh muốn tạm dừng bài thi và thời gian
-                                làm bài của thí sinh vẫn được tính.</p>
-                        </div>
+                    <div class="col-md-6">
+                        <label >Email</label>
+                        <input type="text" class="form-control email" placeholder="anv@email.com">
                     </div>
-                    <div class="col-md-12 item-co">
-                        <i data="codo" style="color: #FF5733;" class="co fa fa-flag-checkered" aria-hidden="true"></i>
-                        <div>
-                            <p><b style="color: #FF5733;">Cờ đỏ:</b> Xin phép BGK cần hỗ trợ</p>
-                        </div>
+                    <div class="col-md-6">
+                        <label >Đơn vị</label>
+                        <select class="form-control donvi">
+                            <option value="0">-- Chọn đơn vị --</option>
+                            {% for item in donvi %}
+                            <option value="{{ item.id_don_vi }}">{{ item.id_don_vi }} - {{ item.ten_don_vi }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
-
-                    <div class="col-md-12" style="font-size: 18px;">
-                        <p><b>Hướng dẫn:</b></p>
-                        <p>- Thí sinh <b>'click'</b> vào <b>lá cờ</b> mà mình muốn thực hiện và <b>xác nhận yêu cầu</b>
-                            trên phần mềm.</p>
-                        <p>- Yêu cầu sẽ được gửi đến Hội đồng thi.</p>
+                    <div class="col-md-6">
+                        <label >Đối tượng</label>
+                        <select class="form-control sinhvien">
+                            <option value="0">0 - Giảng viên/Nhân viên</option>
+                            <option value="1">1 - Sinh viên</option>
+                            <option value="2">3 - Khác</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label >Khóa</label>
+                        <select class="form-control khoa">
+                            <option selected value="0">-- Chọn Khóa học --</option>
+                            {% for item in khoa %}
+                            <option value="{{ item.id_khoa }}">{{ item.id_khoa }} - {{ item.ten_khoa }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label >Lớp chuyên ngành</label>
+                        <select class="form-control lop">
+                            <option value="0">-- Chọn lớp chuyên ngành --</option>
+                        </select>
                     </div>
                 </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary luuTT">Lưu thông tin</button>
             </div>
         </div>
     </div>
 </div>
 
-<div>
-    <input style="display: none !important;" type="file" id="fileUpload" accept=".zip,.rar,.7zip">
-    <input style="display: none !important;" type="file" id="fileUploadManHinh" accept="video/mp4,video/x-m4v,video/*">
-</div>
+<form method="post" action="{{ url_for('importExcelnguoiDung') }}"
+      enctype="multipart/form-data">
+    <div class="modal fade" id="importKhoa">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Import dữ liệu Người dùng</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Chọn file (*.xlsx) hoặc tải về
+                                <a target="_blank"
+                                   href="{{ url_for('static', filename='excel/nhap-tai-khoan.xlsx') }}">file
+                                    mẫu</a></label>
+                            <input accept=".xlsx" name="file" type="file" class="form-control HoTen">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Tải lên</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
 
 {% endblock %}
 
 {% block script %}
-<script src="/static/js/screen/adapter.js"></script>
-<script src="/static/js/screen/kurento-utils.js"></script>
-<script src="/static/js/screen/kurento-client.js"></script>
-<script type="module">
-    import presenter from '/static/js/screen/presenter.js';
-
-    var presenterObj = new presenter({
-        iceServers: [
-            {urls: "stun:stun.l.google.com:19302"},
-        ],
-        viewID: "1709{{ taiKhoan.id_tai_khoan }}",
-        pathSocketIO: '{{ nghe.pathSocketIO }}',
-        serverSocket: '{{ nghe.serverSocket }}',
-    });
-
-
-    presenterObj.stopSharing(() => {
-        presenterObj.onStatusChanged();
-    });
-
-    presenterObj.onStatusChanged = function () {
-        var status = this.sharingStream.display ? 'shared' : 'not shared';
-        switch (status) {
-            case 'shared':
-                $("#startShare").attr("disabled", true);
-                break;
-            default:
-                $("#startShare").attr('disabled', false);
-        }
-    };
-
-    function startShare() {
-        presenterObj.startSharing({
-            mechanism: 'streamserver',
-            maxFrameRate: '15',
-            screenSize: '1360*768',
-            microphone: 'muted'
-        });
-    }
-
-    document.getElementById("startShare").addEventListener("click", startShare);
-
-    window.startPresent = (options, startEvent, stopEvent, failedEvent) => {
-        presenterObj.startSharing(options, startEvent, stopEvent, failedEvent);
-    }
-
-    window.stopPresent = (stopEvent) => {
-        presenterObj.stopSharing(stopEvent);
-    }
-
-</script>
 <script type="text/javascript">
+    $('.table').DataTable();
 
-    function checkMayTinhAo() {
-        var scriptTag = document.body.appendChild(document.createElement("script"));
-        scriptTag.onload = function () {
-            $(".divShare").show();
-            $(".tbMayAo").hide();
-        };
-        scriptTag.onerror = function () {
-            $(".divShare").hide();
-            $(".tbMayAo").show();
-        };
-        scriptTag.src = '{{ nghe.pathSocketIO }}';
-    }
-
-    $(document).ready(function () {
-        checkMayTinhAo();
+    $('.donvi').change(function () {
+        tools.set("donvi", $(this).val());
     });
 
-    $('.btnNopBai').click(function () {
-        $('#fileUpload').trigger('click');
+    $('.sinhvien').change(function () {
+        tools.set("sinhvien", $(this).val());
     });
 
-    $('#fileUpload').change(function () {
-        $(".btnNopBai").attr("disabled", true);
-        var files = document.getElementById('fileUpload').files;
-        formData = new FormData();
-        formData.append("file", files[0]);
-        formData.append("id_thu_bai", $('.btnNopBai').attr('data'));
+    function dslop() {
         $.ajax({
-            url: "{{ url_for('putNopBaiThiSinh') }}",
-            type: 'POST',
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function (result) {
-                $(".btnNopBai").attr("disabled", false);
-                if (result.status === 200) {
-                    toastr.success(result.message, "Thao tác thành công");
-                    setTimeout(function () {
-                        location.reload();
-                    }, 750);
-                } else {
-                    $(".btnNopBai").attr("disabled", false);
-                    toastr.error(result.message, "Thao tác thất bại");
-                }
+            url: "{{ url_for('getDSLop')}}",
+            type: "GET",
+            data: {
+                'id_khoa': $('.khoa').val(),
+                'id_don_vi': $('.donvi').val(),
             },
-            xhr: function () {
-                var xhr = $.ajaxSettings.xhr();
-                if (xhr.upload) {
-                    xhr.upload.addEventListener('progress', function (event) {
-                        var percent = 0;
-                        var position = event.loaded || event.position;
-                        var total = event.total;
-                        if (event.lengthComputable) {
-                            percent = Math.ceil(position / total * 100);
-                        }
-                        $(".btnNopBai").html("<i class='fa fa-cloud-upload' aria-hidden='true' style='margin-right: 10px;'></i> Đang tải lên tệp tin " + percent + "%");
-                    }, true);
-                }
-                return xhr;
+            success: function (result) {
+                $('.lop').empty();
+                $('.lop').append("<option value='0'>-- Chọn lớp chuyên ngành --</option>")
+                result.forEach(function (item) {
+                    $('.lop').append("<option value='" + item.id_lop + "'>" + item.id_lop + " - " + item.ten_lop + "</option>")
+                });
             },
             error: function (error) {
                 toastr.error(error, "Thao tác thất bại");
-                console.log(error);
             }
         });
-    });
-
-    $('.xoaNopBai').click(function () {
-        if (confirm('Xác nhận xóa thông tin NỘP BÀI?\nDữ liệu sẽ không thể phục hồi lại được?')) {
-            var folder = $(this).attr('data')
-            $.ajax({
-                url: "{{ url_for('deleteNopBaiThiSinh') }}",
-                type: 'DELETE',
-                data: {
-                    'folder': folder
-                },
-                success: function (result) {
-                    if (result.status === 200) {
-                        toastr.success(result.message, "Thao tác thành công");
-                        setTimeout(function () {
-                            location.reload();
-                        }, 750);
-                    } else {
-                        toastr.error(result.message, "Thao tác thất bại");
-                    }
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            });
-        }
-    });
-
-    function makeID(length = 12) {
-        var result = '';
-        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        var charactersLength = characters.length;
-        for (var i = 0; i < length; i++) {
-            result += characters.charAt(Math.floor(Math.random() *
-                charactersLength));
-        }
-        return 'WEB-' + result;
-    }
-
-    client = new Paho.MQTT.Client('peer.vlute.edu.vn', 3001, makeID());
-    client.onConnectionLost = onConnectionLost;
-    client.connect({onSuccess: onConnect, useSSL: true});
-
-    function onConnectionLost(responseObject) {
-        if (responseObject.errorCode !== 0) {
-            console.log("onConnectionLost:" + responseObject.errorMessage);
-        }
-    }
-
-    function onConnect() {
-        console.log("onConnect");
-        client.subscribe("/nofitication/{{ nghe.id_nghe }}");
     }
 
     $(document).ready(function () {
-        $('.sidebar-toggle').trigger('click');
+        $(".lazy").lazyload();
 
-        $('.float').click(function () {
-            $('#modelHoTro').modal('show');
+        $('.donvi, .khoa').change(function () {
+            dslop();
+        })
+
+        $('.sinhvien').change(function () {
+            if ($(this).val() === "1") {
+                $('.lop').val(0);
+                $('.khoa').val(0);
+            }
+        })
+
+        $('.btnImport').click(function () {
+            $('#importKhoa').modal('show');
         });
 
-        $('.co').click(function () {
-            var co = $(this).attr('data');
-            var r = confirm("Nhấn vào 'OK' để gửi yêu cầu đến Hội đồng thi");
-            if (r === true) {
-                message = new Paho.MQTT.Message(JSON.stringify({
-                    "hoten": "{{ session['ho_ten'] }}",
-                    "id_tai_khoan": "{{ session['id_tai_khoan'] }}",
-                    "co": co,
-                }));
-                message.destinationName = "/support/flag/{{ session['id_nghe'] }}";
-                client.send(message);
-                toastr.success("Đã gửi yêu cầu thành công", "Thông báo");
-                $('#modelHoTro').modal('hide');
+        $(".btnThem").click(function () {
+            $('.donvi').val(tools.get("donvi"));
+            $('.sinhvien').val(tools.get("sinhvien"));
+            $('.luuTT').attr('type', 'them');
+            $('#md-them').modal('show');
+        });
+
+        $('.luuTT').click(function () {
+            var type = $(this).attr('type');
+            switch (type) {
+                case 'them':
+                    $.ajax({
+                        url: "{{ url_for('putTaiKhoan')}}",
+                        type: "PUT",
+                        data: {
+                            'hoten': $('.hoten').val(),
+                            'email': $('.email').val(),
+                            'donvi': $('.donvi').val(),
+                            'sinhvien': $('.sinhvien').val(),
+                            'lop': $('.lop').val(),
+                        },
+                        success: function (result) {
+                            if (result.status === 200) {
+                                toastr.success(result.message, "Thao tác thành công");
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 750);
+                            } else {
+                                toastr.error(result.message, "Thao tác thất bại");
+                            }
+                        },
+                        error: function (error) {
+                            toastr.error(error, "Thao tác thất bại");
+                        }
+                    });
+                    break;
+
+                case 'cap-nhat':
+                    $.ajax({
+                        url: "{{ url_for('postTaiKhoan')}}",
+                        type: "POST",
+                        data: {
+                            'nguoidung': $('.luuTT').attr('nguoidung'),
+                            'hoten': $('.hoten').val(),
+                            'email': $('.email').val(),
+                            'donvi': $('.donvi').val(),
+                            'sinhvien': $('.sinhvien').val(),
+                            'lop': $('.lop').val(),
+                        },
+                        success: function (result) {
+                            if (result.status === 200) {
+                                toastr.success(result.message, "Thao tác thành công");
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 750);
+                            } else {
+                                toastr.error(result.message, "Thao tác thất bại");
+                            }
+                        },
+                        error: function (error) {
+                            toastr.error(error, "Thao tác thất bại");
+                        }
+                    });
+            }
+
+        });
+
+        $(document).on("click", ".xoa", function () {
+            var id = $(this).attr('data');
+            var email = $(this).attr('email');
+            if (confirm('Khi xóa, các thông tin "Người dùng" sẽ được xóa tất cả?')) {
+                $.ajax({
+                    url: "{{ url_for('deleteTaiKhoan')}}",
+                    type: "DELETE",
+                    data: {
+                        'idnguoidung': id,
+                        'email': email,
+                    },
+                    success: function (result) {
+                        if (result.status === 200) {
+                            toastr.success(result.message, "Thao tác thành công");
+                            setTimeout(function () {
+                                location.reload();
+                            }, 750);
+                        } else {
+                            toastr.error(result.message, "Thao tác thất bại");
+                        }
+                    },
+                    error: function (error) {
+                        toastr.error(error, "Thao tác thất bại");
+                    }
+                });
             }
         });
 
-        $('.taiLenFileGhiManHinh').click(function () {
-            $('#fileUploadManHinh').trigger('click');
+        $(document).on("click", ".capnhat", function () {
+            var data = JSON.parse($(this).attr('data'));
+            $('.hoten').val(data.ho_ten);
+            $('.email').val(data.email);
+            $('.donvi').val(data.id_don_vi);
+            $('.sinhvien').val(data.doi_tuong);
+            $('.luuTT').attr('nguoidung', data.id_nguoi_dung).attr('type', 'cap-nhat');
+            $('#md-them').modal('show');
         });
 
-        $('#fileUploadManHinh').change(function () {
-            $(".taiLenFileGhiManHinh").attr("disabled", true);
-            var files = document.getElementById('fileUploadManHinh').files;
-            formData = new FormData();
-            formData.append("videoGhiHinh", files[0]);
+        $('.btnCapNhatAnh').click(function () {
             $.ajax({
-                url: "{{ url_for('postFileGhiManHinh') }}",
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
+                url: "{{ url_for('getCapNhatSLAnh')}}",
+                type: "POST",
+                data: {id_don_vi: $('.loc-don-vi').val()},
                 success: function (result) {
-                    $(".taiLenFileGhiManHinh").attr("disabled", false);
                     if (result.status === 200) {
                         toastr.success(result.message, "Thao tác thành công");
                         setTimeout(function () {
                             location.reload();
                         }, 750);
                     } else {
-                        $(".taiLenFileGhiManHinh").attr("disabled", false);
                         toastr.error(result.message, "Thao tác thất bại");
                     }
                 },
-                xhr: function () {
-                    var xhr = $.ajaxSettings.xhr();
-                    xhr.upload.onprogress = function (e) {
-                        var giaTri = Math.floor(e.loaded / e.total * 100);
-                        console.log(giaTri)
-                    };
-                    return xhr;
-                },
                 error: function (error) {
-                    $(".taiLenFileGhiManHinh").attr("disabled", false);
-                    console.log(error);
+                    toastr.error(error, "Thao tác thất bại");
                 }
             });
         });

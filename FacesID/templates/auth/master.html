@@ -6,8 +6,7 @@
     <meta name="googlebot" content="noindex">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}"/>
-    <title>{% block title %}{% endblock %} - Hệ thống máy tính Đám mây</title>
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <title>{% block title %}{% endblock %} - Faces ID</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/select2.min.css') }}">
@@ -17,8 +16,10 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/toastr.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/skins.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet"href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-    <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery-ui.min.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/js.cookie.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/jquery.dataTables.min.js') }}"></script>
@@ -26,19 +27,18 @@
     <script src="{{ url_for('static', filename='js/toastr.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/push-menu-left.js') }}"></script>
     <script src="{{ url_for('static', filename='js/tree-menu.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/run.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/clipboard.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/cit.js') }}"></script>
     <script src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/moment.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery-ui.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/lazyload.js') }}"></script>
 </head>
-<div id='box'></div>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
     <header class="main-header">
-        <a href="#" class="logo">
+        <a href="http://localhost/cit/public/auth" class="logo">
             <span class="logo-lg">
                 <img src="{{ url_for('static', filename='images/logo.png') }}" height="35" alt="Faces ID">
-                <b style="padding-left: 10px;"></b>
+                <b style="padding-left: 10px;">AI. VISION</b>
             </span>
         </a>
         <nav class="navbar navbar-static-top">
@@ -51,53 +51,50 @@
 
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-
-                    <li class="dropdown notifications-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-                            <i class="fa fa-bell-o"></i>
-                            <span class="label label-warning">1</span>
+                    <li class="dropdown user user-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <img src="{{ session['anh'] }}" class="user-image" onerror="imgError(this);"
+                                 style="object-fit: cover">
+                            <span class="hidden-xs">{{ session['ho_ten'] }}</span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li>
-                                <ul class="menu">
-                                    <li class="btnXemHDNhanh">
-                                        <a href="#">
-                                            <i class="fa fa-question-circle text-aqua" aria-hidden="true"></i>
-                                            Xem hướng dẫn kỹ thuật
-                                        </a>
-                                    </li>
-                                     <li class="btnXemHDNhanh">
-                                        <a target="_blank" href="https://vlute-screens-ap-southeast-1.s3.ap-southeast-1.amazonaws.com/huong-dan/H%C6%AF%E1%BB%9ANG+D%E1%BA%AAN+THAY+%C4%90%E1%BB%94I+CHU%E1%BA%A8N+H-264.pdf">
-                                            <i class="fa fa-camera text-danger" aria-hidden="true"></i>
-                                            Cấu hình nén ảnh H.264
-                                        </a>
-                                    </li>
-                                </ul>
+                            <li class="user-header">
+                                <img src="{{ session['anh'] }}" class="img-circle" onerror="imgError(this);"
+                                     style="object-fit: cover">
+                                <p>
+                                    {{ session['ho_ten'] }}
+                                    <small>{{ session['email'] }}</small>
+                                </p>
+                            </li>
+                            <li class="user-footer">
+                                <div class="pull-left">
+                                    <a href="{{ url_for('getViewDoiMatKhau') }}"
+                                       class="btn btn-default btn-flat">Đổi mật khẩu</a>
+                                </div>
+                                <div class="pull-right">
+                                    <a href="{{ url_for('dangXuat') }}"
+                                       class="btn btn-default btn-flat">Đăng xuất</a>
+                                </div>
                             </li>
                         </ul>
                     </li>
-
                 </ul>
             </div>
         </nav>
     </header>
 
-    {% if session['id_chuc_vu'] == 0 %}
     <aside class="main-sidebar">
         <section class="sidebar">
             <ul class="sidebar-menu" data-widget="tree">
-                <li class="header">QUẢN LÝ THÔNG TIN</li>
+                <li class="header">CHỨC NĂNG</li>
                 <li>
-                    <a href="{{ url_for('home') }}">
-                        <i class="fa fa-home" aria-hidden="true"></i>
-                        <span>Trang chủ</span>
+                    <a href="{{ url_for('dsKhoaCua') }}">
+                        <i class="fa fa-hand-pointer-o"></i> <span>Khóa cửa vân tay</span>
                     </a>
                 </li>
             </ul>
         </section>
     </aside>
-    {% endif %}
-
 
     <div class="content-wrapper">
         <div class="container-fluid no-padding">
@@ -108,13 +105,10 @@
 
     <footer class="main-footer">
         <strong>
-            <a target="_blank" href="">@2021 | Khoa Công nghệ Thông tin - Đại học Sư phạm Kỹ
-                thuật Vĩnh Long</a>.
+            <a href="https://adminlte.io">@2020 | Hệ thống nhận dạng khuôn mặt</a>.
         </strong>
     </footer>
 </div>
-
-
 </body>
 </html>
 <script>
@@ -137,30 +131,21 @@
         'stateSave': true
     });
 
-    if (localStorage.getItem("tabActive")) {
-        $('.tab').removeClass('active');
-        $('.tab-pane').removeClass('active');
-        $('.' + localStorage.getItem("tabActive")).addClass('active');
-    }
-
-    $('.tab').click(function () {
-        localStorage.setItem("tabActive", $(this).attr('data'));
-    });
-
     $(document).ready(function () {
-        var tmp = localStorage.getItem('menu');
-        $('.sidebar-menu li').each(function () {
+        $menu = $('.treeview-menu li, .sidebar-menu li');
+        $menu.each(function () {
+            var tmp = localStorage.getItem('menu');
             if (tmp === $(this).text().trim()) {
                 $(this).addClass('active');
                 $(this).parent().parent().addClass('active menu-open');
             }
         });
 
-        $('.sidebar-menu li').click(function () {
+        $menu.click(function () {
             localStorage.setItem('menu', $(this).text().trim())
         });
+
+
     });
-
-
 </script>
 {% block script %}{% endblock %}

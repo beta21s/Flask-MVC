@@ -1,0 +1,14 @@
+.idea
+data/*
+source/FacesID/static/faces/*
+source/FacesID/static/uploads/*
+source/FacesID/static/audios/*
+venv
+*.zip
+*.7zip
+*.pyc
+source/config.py
+mqtt/node_modules/*
+socket/node_modules/*
+source/FacesID/logs/*
+.DS_Store
