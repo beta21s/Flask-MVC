@@ -15,5 +15,5 @@ class config():
     MYSQL = 'localhost'
     MYSQL_PORT = 3306
     MYSQL_USER = 'root'
-    MYSQL_PASS = ''
-    DATABASE = 'vlute_clouds'
+    MYSQL_PASS = 'root'
+    DATABASE = 'abc'

@@ -1,0 +1,52 @@
+{% extends "auth/master.html" %}
+{% block title %} Quản lý tài khoản {% endblock %}
+
+{% block content %}
+<section class="content-header">
+    <h1>
+        <b>Người dùng</b>
+        <small>Danh sách người dùng</small>
+    </h1>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-solid">
+
+                <div class="box-body">
+                    <table class="table-striped table">
+                        <thead>
+                        <tr>
+                            <th style="width: 120px;">#</th>
+                            <th>Họ tên</th>
+                            <th>Đơn vị</th>
+                            <th>Lớp</th>
+                            <th>Tổng ảnh</th>
+                            <th>Đối tượng</th>
+                            <th>Ngày tạo</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in dsTB %}
+                            <tr>
+                                <td>{{item.ten_thiet_bi}}</td>
+                                <td>{{item.ten_thiet_bi}}</td>
+                                <td>{{item.ten_thiet_bi}}</td>
+                                <td>{{item.ten_thiet_bi}}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+
+</script>
+{% endblock %}

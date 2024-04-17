@@ -6,8 +6,12 @@ from flask import render_template, session, Response, request, jsonify
 import uuid, os, re, shutil
 from pathlib import Path
 
-path = "/login"
+from FacesID.models.ThietBiModel import ThietBiModel
+
+path = "/thiet-bi"
 
 @app.route(path + "/")
-def taiKhoanChiTiet():
-    return render_template('auth/error/khong-co-quyen.html')
+def dsThietBi():
+    tb = ThietBiModel()
+    ds = tb.danhSach()
+    return render_template('auth/thiet-bi/danh-sach.html', dsTB=ds)
